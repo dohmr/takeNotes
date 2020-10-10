@@ -36,6 +36,23 @@ app.post("/api/notes", (req, res) => {
     savedNotes.push(addNote);
     //write file to api
     fs.writeFileSync("./db/db.json", JSON.stringify(savedNotes));
+    // console.log("File written");
+    res.json(savedNotes);
+});
+//use param id. use let to allow variable to change.
+app.delete("/api/notes/:id", function(req, res) {
+    let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+    const id = req.params.id;
+    let newID = 0;
+    // console.log(`Deleting ${id}`);
+    savedNotes = savedNotes.filter(notes => {
+        return notes.id != id;
+    })    
+    for (notes of savedNotes) {
+        notes.id = newID.toString();
+        newID++;
+    }
+    fs.writeFileSync("./db/db.json", JSON.stringify(savedNotes));
     res.json(savedNotes);
 });
 
